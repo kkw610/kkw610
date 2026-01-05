@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}아이디어 사이트{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        nav {
+            background: #fff;
+            padding: 1.0rem 2.0rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav .menu {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.0rem;
+        }
+        
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        nav a:hover {
+            color: #667eea;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 2.0rem auto;
+            padding: 0 2.0rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #667eea;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.0rem;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+        }
+        
+        .btn-gray {
+            background: #6c757d;
+        }
+        
+        .btn-gray:hover {
+            background: #5a6268;
+        }
+        
+        .btn-red {
+            background: #dc3545;
+        }
+        
+        .btn-red:hover {
+            background: #c82333;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2.0rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2.0rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.0rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2.0rem;
+        }
+        
+        .pagination a,
+        .pagination span {
+            padding: 0.5rem 1.0rem;
+            background: #fff;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid #667eea;
+        }
+        
+        .pagination .current {
+            background: #667eea;
+            color: #fff;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 상단 메뉴 -->
+    <nav>
+        <div class="menu">
+            <a href="{% url 'ideas:ideas_list' %}" class="logo">💡 아이디어 사이트</a>
+            <ul>
+                <li><a href="{% url 'ideas:ideas_list' %}">아이디어 목록</a></li>
+                <li><a href="{% url 'ideas:ideas_create' %}">아이디어 등록</a></li>
+                <li><a href="{% url 'ideas:devtools_list' %}">개발툴 목록</a></li>
+                <li><a href="{% url 'ideas:devtools_create' %}">개발툴 등록</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 메인 내용 -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- CSRF 토큰 (AJAX 요청에 필요) -->
+    <script>
+        // 쿠키에서 CSRF 토큰 가져오기
+        function getCookie(name) {
+            let value = null;
+            if (document.cookie) {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        value = cookie.substring(name.length + 1);
+                        break;
+                    }
+                }
+            }
+            return value;
+        }
+        const csrftoken = getCookie('csrftoken');
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

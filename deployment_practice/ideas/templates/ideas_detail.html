@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ idea.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 2.0rem;
+    }
+    
+    .detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .detail-header {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2.0rem;
+        margin-bottom: 2.0rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .detail-header h1 {
+        display: flex;
+        align-items: center;
+        gap: 1.0rem;
+        margin-bottom: 1.0rem;
+    }
+    
+    .star-btn {
+        background: none;
+        border: none;
+        font-size: 2.0rem;
+        cursor: pointer;
+    }
+    
+    .star-btn.active {
+        color: rgba(255, 217, 0);
+    }
+
+    .meta-info {
+        display: flex;
+        gap: 2.0rem;
+        color: #666;
+        flex-wrap: wrap;
+    }
+    
+    .meta-item {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .devtool-link {
+        padding: 0.5rem 1.0rem;
+        background: #667eea;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+
+    .detail-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto 2.0rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .interest-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        padding: 1.0rem 2.0rem;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .detail-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2.0rem;
+        margin-bottom: 2.0rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        line-height: 1.8;
+    }
+    
+    .detail-content h2 {
+        color: #667eea;
+        margin-bottom: 1.0rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1.0rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>💡 아이디어 상세</h1>
+</div>
+
+<div class="detail-container">
+    <!-- 헤더 -->
+    <div class="detail-header">
+        <h1>
+            {{ idea.title }}
+            <button class="star-btn {% if is_starred %}active{% endif %}" 
+                    id="star-button"
+                    onclick="toggleStar('{{ idea.pk }}')">
+                {% if is_starred %}★{% else %}☆{% endif %}
+            </button>
+        </h1>
+        
+        <div class="meta-info">
+            <div class="meta-item">
+                <strong>개발툴:</strong>
+                <a href="{% url 'ideas:devtools_detail' idea.devtool.pk %}" class="devtool-link">
+                    🛠️ {{ idea.devtool.name }}
+                </a>
+            </div>
+            <div class="meta-item">
+                <strong>등록일:</strong>
+                {{ idea.created_at|date:"Y년 m월 d일" }}
+            </div>
+        </div>
+    </div>
+    
+    <!-- 이미지 -->
+    {% if idea.image %}
+    <img src="{{ idea.image.url }}" alt="{{ idea.title }}" class="detail-image">
+    {% endif %}
+    
+    <!-- 관심도 -->
+    <div class="card">
+        <div class="interest-box">
+            관심도: {{ idea.interest }}
+        </div>
+    </div>
+    
+    <!-- 내용 -->
+    <div class="detail-content">
+        <h2>📝 내용</h2>
+        <p style="white-space: pre-wrap;">{{ idea.content }}</p>
+    </div>
+    
+    <!-- 버튼 -->
+    <div class="button-group">
+        <a href="{% url 'ideas:ideas_list' %}" class="btn btn-gray">📋 목록</a>
+        <a href="{% url 'ideas:ideas_update' idea.pk %}" class="btn">✏️ 수정</a>
+        <form method="post" action="{% url 'ideas:ideas_delete' idea.pk %}" 
+              style="display: inline;"
+              onsubmit="return confirm('정말 삭제하시겠습니까?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-red">🗑️ 삭제</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 찜하기 버튼 클릭
+function toggleStar(ideaId) {
+    fetch('/ideas/' + ideaId + '/star/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const button = document.getElementById('star-button');
+        const count = document.getElementById('star-count');
+        
+        // 별 모양 변경
+        if (data.is_starred) {
+            button.textContent = '★';
+            button.classList.add('active');
+        } else {
+            button.textContent = '☆';
+            button.classList.remove('active');
+        }
+        
+        // 개수 업데이트
+        count.textContent = data.star_count + '개';
+    })
+    .catch(error => {
+        alert('오류가 발생했습니다.');
+    });
+}
+</script>
+{% endblock %}

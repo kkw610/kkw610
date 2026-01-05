@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if devtool %}개발툴 수정{% else %}개발툴 등록{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 2.0rem;
+    }
+    
+    .page-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 1.0rem;
+        margin-top: 2.0rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>{% if devtool %}✏️ 개발툴 수정{% else %}➕ 개발툴 등록{% endif %}</h1>
+</div>
+
+<div class="form-container">
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- 개발툴명 -->
+            <div class="form-group">
+                <label for="name">개발툴명 *</label>
+                <input type="text" id="name" name="name" 
+                       value="{% if devtool %}{{ devtool.name }}{% endif %}" 
+                       required>
+            </div>
+            
+            <!-- 종류 -->
+            <div class="form-group">
+                <label for="kind">종류 *</label>
+                <select id="kind" name="kind" required>
+                    <option value="">-- 종류 선택 --</option>
+                    {% for value, label in KIND_CHOICES %}
+                        <option value="{{ value }}" 
+                                {% if devtool and devtool.kind == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- 설명 -->
+            <div class="form-group">
+                <label for="content">설명 *</label>
+                <textarea id="content" name="content" required>{% if devtool %}{{ devtool.content }}{% endif %}</textarea>
+            </div>
+            
+            <!-- 버튼 -->
+            <div class="button-group">
+                <button type="submit" class="btn">
+                    {% if devtool %}수정 완료{% else %}등록하기{% endif %}
+                </button>
+                <a href="{% if devtool %}{% url 'ideas:devtools_detail' devtool.pk %}{% else %}{% url 'ideas:devtools_list' %}{% endif %}" 
+                   class="btn btn-gray">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

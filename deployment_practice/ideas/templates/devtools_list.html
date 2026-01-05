@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}개발툴 목록{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 2.0rem;
+    }
+    
+    .page-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .devtools-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.0rem;
+    }
+    
+    @media (max-width: 1200px) {
+        .devtools-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 900px) {
+        .devtools-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 600px) {
+        .devtools-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .devtool-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2.0rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .devtool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+
+    .kind-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #667eea;
+        color: #fff;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 1.0rem;
+    }
+    
+    .devtool-card h3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .devtool-card h3 a {
+        color: #333;
+        text-decoration: none;
+    }
+    
+    .devtool-card h3 a:hover {
+        color: #667eea;
+    }
+
+    .devtool-content {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1.0rem;
+    }
+
+    .devtool-date {
+        color: #999;
+        font-size: 0.9rem;
+        border-top: 1px solid #eee;
+        padding-top: 1.0rem;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 4.0rem 2.0rem;
+        background: #fff;
+        border-radius: 12px;
+    }
+    
+    .empty h2 {
+        color: #999;
+        margin-bottom: 1.0rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>🛠️ 개발툴 목록</h1>
+</div>
+
+{% if page_obj %}
+    <div class="devtools-grid">
+        {% for devtool in page_obj %}
+        <div class="devtool-card">
+            <span class="kind-badge">{{ devtool.get_kind_display }}</span>
+            <h3><a href="{% url 'ideas:devtools_detail' devtool.pk %}">{{ devtool.name }}</a></h3>
+            <div class="devtool-content">{{ devtool.content }}</div>
+            <div class="devtool-date">
+                등록일: {{ devtool.created_at|date:"Y.m.d" }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- 페이지 번호 -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+        {% endif %}
+        
+        <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">마지막</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% else %}
+    <div class="empty">
+        <h2>등록된 개발툴이 없습니다</h2>
+        <a href="{% url 'ideas:devtools_create' %}" class="btn">개발툴 등록하기</a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if idea %}아이디어 수정{% else %}아이디어 등록{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 2.0rem;
+    }
+    
+    .page-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 1.0rem;
+        margin-top: 2.0rem;
+    }
+    
+    .preview-image {
+        max-width: 300px;
+        margin-top: 1.0rem;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h1>{% if idea %}✏️ 아이디어 수정{% else %}➕ 아이디어 등록{% endif %}</h1>
+</div>
+
+<div class="form-container">
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- 제목 -->
+            <div class="form-group">
+                <label for="title">제목 *</label>
+                <input type="text" id="title" name="title" 
+                       value="{% if idea %}{{ idea.title }}{% endif %}" 
+                       required>
+            </div>
+            
+            <!-- 이미지 -->
+            <div class="form-group">
+                <label for="image">이미지 *</label>
+                <input type="file" id="image" name="image" 
+                       accept="image/*" 
+                       {% if not idea %}required{% endif %}
+                       onchange="previewImage(event)">
+                {% if idea and idea.image %}
+                    <img src="{{ idea.image.url }}" alt="현재 이미지" class="preview-image" id="preview">
+                    <p style="margin-top: 0.5rem; color: #999;">
+                        새 이미지를 선택하지 않으면 기존 이미지가 유지됩니다.
+                    </p>
+                {% else %}
+                    <img id="preview" class="preview-image" style="display: none;">
+                {% endif %}
+            </div>
+            
+            <!-- 내용 -->
+            <div class="form-group">
+                <label for="content">내용 *</label>
+                <textarea id="content" name="content" required>{% if idea %}{{ idea.content }}{% endif %}</textarea>
+            </div>
+            
+            <!-- 관심도 -->
+            <div class="form-group">
+                <label for="interest">관심도 *</label>
+                <input type="number" id="interest" name="interest" 
+                       value="{% if idea %}{{ idea.interest }}{% else %}0{% endif %}" 
+                       min="0" required>
+            </div>
+            
+            <!-- 개발툴 -->
+            <div class="form-group">
+                <label for="devtool">개발툴 *</label>
+                <select id="devtool" name="devtool" required>
+                    <option value="">-- 개발툴 선택 --</option>
+                    {% for devtool in devtools %}
+                        <option value="{{ devtool.pk }}" 
+                                {% if idea and idea.devtool.pk == devtool.pk %}selected{% endif %}>
+                            {{ devtool.name }} ({{ devtool.get_kind_display }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- 버튼 -->
+            <div class="button-group">
+                <button type="submit" class="btn">
+                    {% if idea %}수정 완료{% else %}등록하기{% endif %}
+                </button>
+                <a href="{% if idea %}{% url 'ideas:ideas_detail' idea.pk %}{% else %}{% url 'ideas:ideas_list' %}{% endif %}" 
+                   class="btn btn-gray">취소</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 이미지 미리보기
+function previewImage(event) {
+    const preview = document.getElementById('preview');
+    const file = event.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+
+{% block title %}아이디어 목록{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-title {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 2.0rem;
+    }
+    
+    .page-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-bar {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2.0rem;
+    }
+    
+    .search-bar form {
+        display: flex;
+        gap: 1.0rem;
+        flex-wrap: wrap;
+    }
+    
+    .search-bar input[type="text"] {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .search-bar select {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .ideas-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.0rem;
+        margin-bottom: 2.0rem;
+    }
+    
+    @media (max-width: 1200px) {
+        .ideas-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 900px) {
+        .ideas-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 600px) {
+        .ideas-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .idea-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .idea-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+
+    .idea-image {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        background: #f0f0f0;
+    }
+    
+    .idea-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .star-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    
+    .star-btn.active {
+        color: rgba(255, 217, 0);
+    }
+
+    .idea-info {
+        padding: 1.5rem;
+    }
+    
+    .idea-info h3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .idea-info h3 a {
+        color: #333;
+        text-decoration: none;
+    }
+    
+    .idea-info h3 a:hover {
+        color: #667eea;
+    }
+
+    .idea-meta {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 1.0rem;
+        border-top: 1px solid #eee;
+        margin-top: 1.0rem;
+    }
+    
+    .devtool-name {
+        color: #667eea;
+        font-weight: bold;
+    }
+    
+    .star-count {
+        color: #999;
+    }
+
+    .interest-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .interest-control button {
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    
+    .interest-value {
+        font-weight: bold;
+        color: #667eea;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 4.0rem 2.0rem;
+        background: white;
+        border-radius: 12px;
+    }
+    
+    .empty h2 {
+        color: #999;
+        margin-bottom: 1.0rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 페이지 제목 -->
+<div class="page-title">
+    <h1>💡 아이디어 목록</h1>
+</div>
+
+<!-- 검색 및 정렬 -->
+<div class="search-bar">
+    <form method="get">
+        <input type="text" name="search" placeholder="아이디어 검색.." value="{{ search }}">
+        <select name="sort" onchange="this.form.submit()">
+            <option value="-created" {% if sort == '-created' %}selected{% endif %}>최신순</option>
+            <option value="created" {% if sort == 'created' %}selected{% endif %}>등록순</option>
+            <option value="star" {% if sort == 'star' %}selected{% endif %}>찜하기순</option>
+            <option value="title" {% if sort == 'title' %}selected{% endif %}>이름순</option>
+            <option value="interest" {% if sort == 'interest' %}selected{% endif %}>관심도순</option>
+        </select>
+        <button type="submit" class="btn">검색</button>
+    </form>
+</div>
+
+<!-- 아이디어 목록 -->
+{% if page_obj %}
+    <div class="ideas-grid">
+        {% for idea in page_obj %}
+        <div class="idea-card">
+            <!-- 이미지 -->
+            <div class="idea-image">
+                {% if idea.image %}
+                    <img src="{{ idea.image.url }}" alt="{{ idea.title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=No+Image" alt="이미지 없음">
+                {% endif %}
+                
+                <!-- 찜하기 버튼 -->
+                <button class="star-btn {% if idea.is_starred %}active{% endif %}" 
+                        onclick="toggleStar(event, '{{ idea.pk }}', this)">
+                    {% if idea.is_starred %}★{% else %}☆{% endif %}
+                </button>
+            </div>
+            
+            <!-- 정보 -->
+            <div class="idea-info">
+                <h3><a href="{% url 'ideas:ideas_detail' idea.pk %}">{{ idea.title }}</a></h3>
+                
+                <div class="idea-meta">
+                    <span class="devtool-name">{{ idea.devtool.name }}</span>
+                    <span class="star-count">찜 {{ idea.star_count }}개</span>
+                </div>
+                
+                <!-- 관심도 조절 -->
+                <div class="interest-control">
+                    <button onclick="changeInterest('{{ idea.pk }}', -1)">-</button>
+                    <span class="interest-value" id="interest-{{ idea.pk }}">{{ idea.interest }}</span>
+                    <button onclick="changeInterest('{{ idea.pk }}', 1)">+</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- 페이지 번호 -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1{% if sort %}&sort={{ sort }}{% endif %}{% if search %}&search={{ search }}{% endif %}">처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if sort %}&sort={{ sort }}{% endif %}{% if search %}&search={{ search }}{% endif %}">이전</a>
+        {% endif %}
+        
+        <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if sort %}&sort={{ sort }}{% endif %}{% if search %}&search={{ search }}{% endif %}">다음</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if sort %}&sort={{ sort }}{% endif %}{% if search %}&search={{ search }}{% endif %}">마지막</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% else %}
+    <div class="empty">
+        <h2>등록된 아이디어가 없습니다</h2>
+        <a href="{% url 'ideas:ideas_create' %}" class="btn">아이디어 등록하기</a>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 찜하기 버튼 클릭
+function toggleStar(event, ideaId, button) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // 서버에 요청
+    fetch('/ideas/' + ideaId + '/star/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 별 모양 변경
+        if (data.is_starred) {
+            button.textContent = '★';
+            button.classList.add('active');
+        } else {
+            button.textContent = '☆';
+            button.classList.remove('active');
+        }
+        
+        // 찜 개수 업데이트
+        const card = button.closest('.idea-card');
+        const starCount = card.querySelector('.star-count');
+        starCount.textContent = '찜 ' + data.star_count + '개';
+    })
+    .catch(error => {
+        alert('오류가 발생했습니다.');
+    });
+}
+
+// 관심도 조절
+function changeInterest(ideaId, change) {
+    const url = change > 0 
+        ? '/ideas/' + ideaId + '/interest/increase/'
+        : '/ideas/' + ideaId + '/interest/decrease/';
+    
+    // 서버에 요청
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 관심도 숫자 업데이트
+        const element = document.getElementById('interest-' + ideaId);
+        element.textContent = data.interest;
+    })
+    .catch(error => {
+        alert('오류가 발생했습니다.');
+    });
+}
+</script>
+{% endblock %}
