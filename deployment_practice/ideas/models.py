@@ -1,4 +1,10 @@
+import uuid
 from django.db import models
+
+def idea_image_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return f'ideas/{filename}'
 
 # Create your models here.
 class DevTool(models.Model):
@@ -12,12 +18,12 @@ class DevTool(models.Model):
         ('design', 'Design Tool'),
         ('etc', 'Etc'),
     ]
-    
+
     name = models.CharField(max_length=100)
     kind = models.CharField(max_length=20, choices=KIND_CHOICES)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -30,6 +36,7 @@ class Idea(models.Model):
     star_count = models.IntegerField(default=0)
     devtool = models.ForeignKey(DevTool, on_delete=models.CASCADE, related_name='ideas')
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    image = models.ImageField(upload_to=idea_image_path, blank=True)
+
     def __str__(self):
         return self.title
