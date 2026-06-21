@@ -26,7 +26,7 @@
 
 <br>
 
-## 🛠️ Tech
+## 🛠️ Tech Stack
 
 **Backend**  
 ![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=OpenJDK&logoColor=white)
