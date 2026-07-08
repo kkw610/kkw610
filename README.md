@@ -19,7 +19,7 @@
 
 ## 💻 Projects
 
-* 몰입캠프 온라인 브레인스토밍 협업 툴 <a href="https://github.com/madcamp-official/26s-w1-c2-01">코마인드(CoMind)</a> **BE**
+* 몰입캠프 1주차 산출물 - 온라인 브레인스토밍 협업 툴 <a href="https://github.com/madcamp-official/26s-w1-c2-01">코마인드(CoMind)</a> **BE**
 * 피로그래밍 세션 통합 관리 플랫폼 <a href="https://github.com/pirogramming/PiroIn">피로인(PiroIn)</a> **BE**
 * 테크포임팩트 캠퍼스 지역소멸 주제 프로젝트 <a href="https://github.com/TechForImpact-KeunGeulSsi/Dure">두레(Dure)</a> **BE**
 * 졸업프로젝트 <a href="https://github.com/Grad-Project-Team48/Grad_Project_BE">실시간 협업 기반 AI 개인정보 마스킹 및 검수 플랫폼(BLeyeND)</a> **BE**
