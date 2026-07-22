@@ -19,6 +19,7 @@
 
 ## 💻 Projects
 
+* 몰입캠프 2주차 산출물 <a href="https://github.com/madcamp-official/26s-w2-c2-06">AI Champion</a> **BE**
 * 몰입캠프 1주차 산출물 <a href="https://github.com/madcamp-official/26s-w1-c2-01">코마인드(CoMind)</a> **BE**
 * 피로그래밍 세션 통합 관리 플랫폼 <a href="https://github.com/pirogramming/PiroIn">피로인(PiroIn)</a> **BE**
 * 테크포임팩트 캠퍼스 지역소멸 주제 프로젝트 <a href="https://github.com/TechForImpact-KeunGeulSsi/Dure">두레(Dure)</a> **BE**
