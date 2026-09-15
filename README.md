@@ -7,6 +7,7 @@
 
 ## 🗂️ Experience
 
+* AWS 학생 주도 커뮤니티 <a href="https://builder.aws.com/community/student-builder-groups">ASBG</a> 수료 <sub>2026.09. - </sub>
 * <a href="https://codex-community-korea.skysplit.chatgpt.site/hackathon">코덱스 커뮤니티 해커톤</a> Build 참가 <sub>2026.08.</sub>
 * KAIST 프로그래밍 캠프 <a href="https://madcamp.io/">몰입캠프</a> 수강 <sub>2026.07. - 2026.08.</sub>
 * 웹개발 연합 동아리 <a href="https://pirogramming.com/">피로그래밍</a> 25기 교육팀원 활동 <sub>2026.03. - 2026.08.</sub>
