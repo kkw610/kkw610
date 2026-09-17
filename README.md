@@ -23,7 +23,7 @@
 ## 💻 Projects
 
 * 몰입캠프 4주차 산출물 <a href="https://github.com/madcamp-official/LastWeekOnEarth">앙코라(Anchora)</a> **BE/iOS**
-* 몰입캠프 3주차 산출물 <a href="https://github.com/omys-madcamp">오미스(Omys)</a> **PR**
+* 몰입캠프 3주차 산출물 <a href="https://github.com/omys-madcamp">오미스(Omys)</a> **BE/PR**
 * 몰입캠프 2주차 산출물 <a href="https://github.com/madcamp-official/26s-w2-c2-06">AI Champion</a> **BE**
 * 몰입캠프 1주차 산출물 <a href="https://github.com/madcamp-official/26s-w1-c2-01">코마인드(CoMind)</a> **BE**
 * 피로그래밍 세션 통합 관리 플랫폼 <a href="https://github.com/pirogramming/PiroIn">피로인(PiroIn)</a> **BE**
